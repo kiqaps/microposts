@@ -3,15 +3,29 @@ version: '3.7'
 services:
   post_service:
     build: ./post-service
-    ports:
-      - 3001:3000
     volumes:
       - ./post-service/src:/app/src
+    networks:
+      - services
 
   comment_service:
     build: ./comment-service
-    ports:
-      - 3002:3000
     volumes:
       - ./comment-service/src:/app/src
+    networks:
+      - services
 
+  webclient_service:
+    build: ./webclient-service
+    stdin_open: true
+    ports:
+      - 3000:3000
+    volumes:
+      - ./webclient-service/src:/app/src
+      - ./webclient-service/public:/app/public
+    networks:
+      - services
+
+networks:
+    services:
+      driver: bridge
