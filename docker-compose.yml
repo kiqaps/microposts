@@ -3,6 +3,8 @@ version: '3.7'
 services:
   post_service:
     build: ./post-service
+    environment:
+      - MONGO_CONNECTION_URI=mongodb://root:12345678@post_service_db/posts?authSource=admin
     ports:
       - 3001:3000
     volumes:
@@ -10,12 +12,14 @@ services:
     networks:
       - post_service_network
       - services
+    depends_on:
+      - post_service_db
 
   post_service_db:
     image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 12345678
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=12345678
     networks:
       - post_service_network
 

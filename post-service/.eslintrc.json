@@ -24,6 +24,8 @@
   ],
   "rules": {
     "prettier/prettier": "error",
-    "import/order": "error"
+    "import/order": "error",
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": ["error"]
   }
 }
