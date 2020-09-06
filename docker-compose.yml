@@ -3,13 +3,26 @@ version: '3.7'
 services:
   post_service:
     build: ./post-service
+    ports:
+      - 3001:3000
     volumes:
       - ./post-service/src:/app/src
     networks:
+      - post_service_network
       - services
+
+  post_service_db:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 12345678
+    networks:
+      - post_service_network
 
   comment_service:
     build: ./comment-service
+    ports:
+      - 3002:3000
     volumes:
       - ./comment-service/src:/app/src
     networks:
@@ -28,4 +41,7 @@ services:
 
 networks:
     services:
+      driver: bridge
+
+    post_service_network:
       driver: bridge
