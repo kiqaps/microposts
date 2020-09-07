@@ -12,7 +12,7 @@ app.use(express.json())
 
 app.use('/api', apiRouter)
 
-app.use((err: any, req: Request, res: Response, _: NextFunction) => {
+app.use((err: any, _r: Request, res: Response, _n: NextFunction) => {
   console.log('cheguei aqui', err.name)
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({
