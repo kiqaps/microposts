@@ -6,10 +6,15 @@ interface IPostsAPI {
   listAll: () => Promise<IPost[]>
 }
 
+interface IPartialGlobalContext {
+  showLoader: () => void
+  hideLoader: () => void
+}
+
 export const PostsAPI = ({
   showLoader,
   hideLoader,
-}: import('../Contexts/Global').IGlobalContext): IPostsAPI => {
+}: IPartialGlobalContext): IPostsAPI => {
   const httpClient = axios.create({
     baseURL: process.env.REACT_APP_POST_SERVICE_BASE_URL,
   })
@@ -40,7 +45,13 @@ export const PostsAPI = ({
     },
 
     async listAll(): Promise<IPost[]> {
-      const response = await httpClient.get<IPost[]>('/')
+      const response = await httpClient.get<IPost[]>('/', {
+        params: {
+          sort: {
+            createdAt: -1,
+          },
+        },
+      })
       return response.data
     },
   }

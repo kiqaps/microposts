@@ -13,7 +13,8 @@ export const CreatePostForm: React.FC = () => {
     evt.preventDefault()
 
     if (content) {
-      await PostsAPI(globalContext).create(content)
+      const post = await PostsAPI(globalContext).create(content)
+      globalContext.setPosts(old => [...old, post])
       setContent('')
     }
   }

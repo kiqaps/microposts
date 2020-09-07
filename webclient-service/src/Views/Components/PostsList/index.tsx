@@ -1,20 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { IPost } from '../../../Models/IPost'
-import { PostsAPI } from '../../../Services/PostsAPI'
+import React, { useContext } from 'react'
 import { Post } from '../Post'
 import { Container } from '../../Layout'
 import { GlobalContext } from '../../../Contexts/Global'
 
 export const PostsList: React.FC = () => {
-  const [posts, setPosts] = useState<IPost[]>([])
-  const globalContext = useContext(GlobalContext)!
-
-  useEffect(() => {
-    ;(async () => {
-      const allPosts = await PostsAPI(globalContext).listAll()
-      setPosts(allPosts)
-    })()
-  }, [])
+  const { posts } = useContext(GlobalContext)!
 
   return (
     <Container>
