@@ -39,12 +39,12 @@ export const PostsAPI = ({
   )
 
   return {
-    async create(content: string): Promise<IPost> {
+    async create(content) {
       const response = await httpClient.post<IPost>('/', { content })
       return response.data
     },
 
-    async listAll(): Promise<IPost[]> {
+    async listAll() {
       const response = await httpClient.get<IPost[]>('/', {
         params: {
           sort: {
