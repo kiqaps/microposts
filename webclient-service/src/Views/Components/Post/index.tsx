@@ -25,7 +25,9 @@ export const Post: React.FC<PostProps> = ({ post }) => {
         </p>
       </div>
       <CreateCommentForm postId={post._id} />
-      <CommentsList comments={post.comments} />
+      {post.comments && post.comments.length > 0 && (
+        <CommentsList comments={post.comments} />
+      )}
     </PostContainer>
   )
 }

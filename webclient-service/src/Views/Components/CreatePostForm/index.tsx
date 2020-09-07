@@ -14,7 +14,7 @@ export const CreatePostForm: React.FC = () => {
 
     if (content) {
       const post = await PostsAPI(globalContext).create(content)
-      globalContext.setPosts(old => [...old, post])
+      globalContext.setPosts(old => [post, ...old])
       setContent('')
     }
   }

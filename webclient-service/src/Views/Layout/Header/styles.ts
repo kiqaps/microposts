@@ -14,6 +14,7 @@ export const StyledHeader = styled.header`
   }
 
   h1 {
+    cursor: pointer;
     text-transform: uppercase;
     font-size: 4rem;
     font-weight: 300;
