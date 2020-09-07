@@ -5,6 +5,7 @@ import { IPost } from '../../../Models/IPost'
 
 import { format, parseISO } from 'date-fns'
 import { CreateCommentForm } from '../CreateCommentForm'
+import { CommentsList } from '../CommentsList'
 
 interface PostProps {
   post: IPost
@@ -23,7 +24,8 @@ export const Post: React.FC<PostProps> = ({ post }) => {
           </span>
         </p>
       </div>
-      <CreateCommentForm />
+      <CreateCommentForm postId={post._id} />
+      <CommentsList comments={post.comments} />
     </PostContainer>
   )
 }
