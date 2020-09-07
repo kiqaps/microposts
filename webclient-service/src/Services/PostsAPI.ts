@@ -1,18 +1,47 @@
 import axios from 'axios'
 import { IPost } from '../Models/IPost'
 
-const httpClient = axios.create({
-  baseURL: process.env.REACT_APP_POST_SERVICE_BASE_URL,
-})
+interface IPostsAPI {
+  create: (content: string) => Promise<IPost>
+  listAll: () => Promise<IPost[]>
+}
 
-export class PostsAPI {
-  static async create(content: string): Promise<IPost> {
-    const response = await httpClient.post<IPost>('/', { content })
-    return response.data
-  }
+export const PostsAPI = ({
+  showLoader,
+  hideLoader,
+}: import('../Contexts/Global').IGlobalContext): IPostsAPI => {
+  const httpClient = axios.create({
+    baseURL: process.env.REACT_APP_POST_SERVICE_BASE_URL,
+  })
 
-  static async listAll(): Promise<IPost[]> {
-    const response = await httpClient.get<IPost[]>('/')
-    return response.data
+  httpClient.interceptors.request.use(
+    config => {
+      showLoader()
+      return config
+    },
+    error => error,
+  )
+
+  httpClient.interceptors.response.use(
+    response => {
+      hideLoader()
+      return response
+    },
+    error => {
+      hideLoader()
+      return error
+    },
+  )
+
+  return {
+    async create(content: string): Promise<IPost> {
+      const response = await httpClient.post<IPost>('/', { content })
+      return response.data
+    },
+
+    async listAll(): Promise<IPost[]> {
+      const response = await httpClient.get<IPost[]>('/')
+      return response.data
+    },
   }
 }

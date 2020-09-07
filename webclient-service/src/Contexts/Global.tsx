@@ -1,7 +1,7 @@
 import React, { createContext, useState } from 'react'
 import { Spinner } from '../Views/Components/Spinner'
 
-interface IGlobalContext {
+export interface IGlobalContext {
   showLoader: () => void
   hideLoader: () => void
 }
@@ -16,7 +16,7 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
   }
 
   const hideLoader = () => {
-    setLoaderCount(old => old - 1)
+    setLoaderCount(old => (old > 0 ? old - 1 : 0))
   }
 
   return (
