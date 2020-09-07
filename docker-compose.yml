@@ -47,6 +47,7 @@ services:
     build: ./webclient-service
     environment:
       - REACT_APP_POST_SERVICE_BASE_URL=http://localhost:3001/api/posts
+      - REACT_APP_COMMENT_SERVICE_BASE_URL=http://localhost:3002/api/posts
     stdin_open: true
     ports:
       - 3000:3000

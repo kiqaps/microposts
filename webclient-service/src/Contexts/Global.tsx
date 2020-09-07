@@ -8,6 +8,7 @@ import React, {
 import { Spinner } from '../Views/Components/Spinner'
 import { IPost } from '../Models/IPost'
 import { PostsAPI } from '../Services/PostsAPI'
+import { CommentsAPI } from '../Services/CommentsAPI'
 
 export interface IGlobalContext {
   showLoader: () => void
@@ -33,6 +34,12 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     ;(async () => {
       const allPosts = await PostsAPI({ showLoader, hideLoader }).listAll()
+      for (const post of allPosts) {
+        post.comments = await CommentsAPI({
+          showLoader,
+          hideLoader,
+        }).listAll(post._id)
+      }
       setPosts(allPosts)
     })()
   }, [])
