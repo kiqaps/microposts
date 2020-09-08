@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { Post } from '../models/Post'
 import { HttpError } from '../utils/HttpError'
+import { eventbus } from '../services/eventbus'
 
 export const postsRouter = Router()
 
@@ -25,6 +26,8 @@ postsRouter.post('/', async (req, res) => {
 
   const post = new Post({ content })
   await post.save()
+
+  eventbus().publish({ topic: 'newPost', payload: post })
   return res.json(post)
 })
 
