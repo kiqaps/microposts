@@ -12,6 +12,7 @@ services:
     build: ./post-service
     environment:
       - MONGO_CONNECTION_URI=mongodb://root:12345678@post_service_db/posts?authSource=admin
+      - EVENTBUS_ADDR=http://eventbus_service:3000
     ports:
       - 3001:3000
     networks:
@@ -33,6 +34,7 @@ services:
     build: ./comment-service
     environment:
       - MONGO_CONNECTION_URI=mongodb://root:12345678@comment_service_db/posts?authSource=admin
+      - EVENTBUS_ADDR=http://eventbus_service:3000
     ports:
       - 3002:3000
     networks:
