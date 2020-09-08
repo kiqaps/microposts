@@ -21,8 +21,11 @@ app.post('/subscribe', (req, res) => {
   }
 
   listeners[topic] = listeners[topic] || []
-  listeners[topic].push(address)
-  console.log(`- ${address} subscribbed to ${topic}`)
+
+  if (!listeners[topic].includes(address)) {
+    listeners[topic].push(address)
+    console.log(`- ${address} subscribbed to ${topic}`)
+  }
   return res.status(204).send()
 })
 
