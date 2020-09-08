@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { isValidObjectId } from 'mongoose'
 import { Comment } from '../models/Comment'
 import { HttpError } from '../utils/HttpError'
+import { eventbus } from '../services/eventbus'
 
 export const commentsRouter = Router()
 
@@ -42,6 +43,8 @@ commentsRouter.post('/:postId/comments', async (req, res) => {
 
   const comment = new Comment({ content, belongsTo: postId })
   await comment.save()
+
+  eventbus().publish({ topic: 'newComment', payload: comment })
   return res.json(comment)
 })
 
