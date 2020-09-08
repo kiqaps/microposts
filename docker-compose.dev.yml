@@ -16,6 +16,8 @@ services:
       context: ./webclient-service
       dockerfile: Dockerfile.dev
     stdin_open: true
+    ports:
+      - 3000:3000
     volumes:
       - ./webclient-service/src:/app/src
       - ./webclient-service/public:/app/public
