@@ -1,0 +1,13 @@
+{
+  "name": "microposts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:kiqaps/microposts.git",
+  "author": "Caíque Araújo Spósito <kiqaps@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prod:start": "docker-compose up -d",
+    "dev:start": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+    "stop": "docker-compose down"
+  }
+}

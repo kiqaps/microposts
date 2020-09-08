@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  post_service:
+    volumes:
+      - ./post-service/src:/app/src
+    command: yarn dev:server
+
+  comment_service:
+    volumes:
+      - ./comment-service/src:/app/src
+    command: yarn dev:server
+
+  webclient_service:
+    build:
+      context: ./webclient-service
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - ./webclient-service/src:/app/src
+      - ./webclient-service/public:/app/public

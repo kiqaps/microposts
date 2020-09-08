@@ -16,7 +16,7 @@ export const PostsAPI = ({
   hideLoader,
 }: IPartialGlobalContext): IPostsAPI => {
   const httpClient = axios.create({
-    baseURL: process.env.REACT_APP_POST_SERVICE_BASE_URL,
+    baseURL: 'http://localhost:3001/api/posts',
   })
 
   httpClient.interceptors.request.use(

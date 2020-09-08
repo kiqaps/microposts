@@ -16,7 +16,7 @@ export const CommentsAPI = ({
   hideLoader,
 }: IPartialGlobalContext): ICommentsAPI => {
   const httpClient = axios.create({
-    baseURL: process.env.REACT_APP_COMMENT_SERVICE_BASE_URL,
+    baseURL: 'http://localhost:3002/api/posts',
   })
 
   httpClient.interceptors.request.use(

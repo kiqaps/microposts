@@ -7,8 +7,6 @@ services:
       - MONGO_CONNECTION_URI=mongodb://root:12345678@post_service_db/posts?authSource=admin
     ports:
       - 3001:3000
-    volumes:
-      - ./post-service/src:/app/src
     networks:
       - post_service_network
     depends_on:
@@ -28,8 +26,6 @@ services:
       - MONGO_CONNECTION_URI=mongodb://root:12345678@comment_service_db/posts?authSource=admin
     ports:
       - 3002:3000
-    volumes:
-      - ./comment-service/src:/app/src
     networks:
       - comment_service_network
     depends_on:
@@ -44,16 +40,14 @@ services:
       - comment_service_network
 
   webclient_service:
-    build: ./webclient-service
+    build:
+      context: ./webclient-service
+      dockerfile: Dockerfile
     environment:
       - REACT_APP_POST_SERVICE_BASE_URL=http://localhost:3001/api/posts
       - REACT_APP_COMMENT_SERVICE_BASE_URL=http://localhost:3002/api/posts
-    stdin_open: true
     ports:
-      - 3000:3000
-    volumes:
-      - ./webclient-service/src:/app/src
-      - ./webclient-service/public:/app/public
+      - 80:80
 
 networks:
     post_service_network:

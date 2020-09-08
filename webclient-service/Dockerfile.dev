@@ -4,10 +4,9 @@ WORKDIR /app
 
 COPY package.json ./
 COPY yarn.lock ./
-COPY . .
 
-RUN yarn && yarn build
+RUN yarn
 
 EXPOSE 3000
 
-CMD [ "yarn", "prod:server" ]
+CMD [ "yarn", "start" ]
