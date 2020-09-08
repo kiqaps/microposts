@@ -7,12 +7,15 @@ import cors from 'cors'
 
 import { apiRouter } from './router'
 import { HttpError } from './utils/HttpError'
+import { eventbus } from './services/eventbus'
+import { eventHandler } from './router/event'
 
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
+app.post('/event', eventHandler)
 app.use('/api', apiRouter)
 
 app.use((err: any, _r: Request, res: Response, _n: NextFunction) => {
@@ -36,4 +39,6 @@ app.use((err: any, _r: Request, res: Response, _n: NextFunction) => {
 
 app.listen(3000, () => {
   console.log(`Server running at port 3000`)
+
+  eventbus().subscribe('newComment')
 })
