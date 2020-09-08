@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 export interface IEvent {
   topic: string
@@ -6,9 +6,9 @@ export interface IEvent {
 }
 
 interface IEventBus {
-  subscribe: (topic: string) => Promise<AxiosResponse<any>>
-  unsubscribe: (topic: string) => Promise<AxiosResponse<any>>
-  publish: (event: IEvent) => Promise<AxiosResponse<any>>
+  subscribe: (topic: string) => Promise<void>
+  unsubscribe: (topic: string) => Promise<void>
+  publish: (event: IEvent) => Promise<void>
 }
 
 export const eventbus = (): IEventBus => {
@@ -19,25 +19,31 @@ export const eventbus = (): IEventBus => {
   const selfAddress = 'http://post_service:3000'
 
   return {
-    subscribe(topic) {
-      return httpClient.post('/subscribe', {
-        topic,
-        address: selfAddress,
-      })
+    async subscribe(topic) {
+      try {
+        await httpClient.post('/subscribe', {
+          topic,
+          address: selfAddress,
+        })
+      } catch {}
     },
 
-    unsubscribe(topic) {
-      return httpClient.post('/unsubscribe', {
-        topic,
-        address: selfAddress,
-      })
+    async unsubscribe(topic) {
+      try {
+        await httpClient.post('/unsubscribe', {
+          topic,
+          address: selfAddress,
+        })
+      } catch {}
     },
 
-    publish({ topic, payload }) {
-      return httpClient.post('/event', {
-        topic,
-        payload,
-      })
+    async publish({ topic, payload }) {
+      try {
+        await httpClient.post('/event', {
+          topic,
+          payload,
+        })
+      } catch {}
     },
   }
 }
