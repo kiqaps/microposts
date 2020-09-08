@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "webclient-service"
+		},
+		{
+			"path": "eventbus-service"
 		}
 	],
 	"settings": {}
