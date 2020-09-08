@@ -22,6 +22,7 @@ app.post('/subscribe', (req, res) => {
 
   listeners[topic] = listeners[topic] || []
   listeners[topic].push(address)
+  console.log(`- ${address} subscribbed to ${topic}`)
   return res.status(204).send()
 })
 
@@ -40,6 +41,7 @@ app.post('/unsubscribe', (req, res) => {
     )
     if (index >= 0) {
       listeners[topic].splice(index, 1)
+      console.log(`- ${address} unsubscribbed to ${topic}`)
     }
   }
 
@@ -56,7 +58,11 @@ app.post('/event', (req, res) => {
   }
 
   const event: IEvent = { topic }
-  if (payload) event.payload = payload
+  console.log(`- EVENT: ${topic} received`)
+  if (payload) {
+    event.payload = payload
+    console.log(`\twith payload: ${JSON.stringify(payload)}`)
+  }
 
   if (listeners[topic]) {
     for (const address of listeners[topic]) {
