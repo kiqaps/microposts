@@ -1,6 +1,13 @@
 version: '3.7'
 
 services:
+  eventbus_service:
+    build: ./eventbus-service
+    ports:
+      - 3003:3000
+    networks:
+      - services
+
   post_service:
     build: ./post-service
     environment:
@@ -9,8 +16,10 @@ services:
       - 3001:3000
     networks:
       - post_service_network
+      - services
     depends_on:
       - post_service_db
+      - eventbus_service
 
   post_service_db:
     image: mongo
@@ -28,8 +37,10 @@ services:
       - 3002:3000
     networks:
       - comment_service_network
+      - services
     depends_on:
       - comment_service_db
+      - eventbus_service
 
   comment_service_db:
     image: mongo
@@ -50,6 +61,9 @@ services:
       - 80:80
 
 networks:
+    services:
+      driver: bridge
+
     post_service_network:
       driver: bridge
 

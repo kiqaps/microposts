@@ -1,6 +1,11 @@
 version: '3.7'
 
 services:
+  eventbus_service:
+    volumes:
+      - ./eventbus-service/src:/app/src
+    command: yarn dev:server
+
   post_service:
     volumes:
       - ./post-service/src:/app/src
