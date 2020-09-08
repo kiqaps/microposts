@@ -69,7 +69,9 @@ app.post('/event', (req, res) => {
 
   if (listeners[topic]) {
     for (const address of listeners[topic]) {
-      axios.post(`${address}/event`, event)
+      axios.post(`${address}/event`, event).catch(err => {
+        console.log(err)
+      })
     }
   }
   return res.status(204).send()
