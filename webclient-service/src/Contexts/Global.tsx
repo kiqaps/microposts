@@ -34,12 +34,6 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     ;(async () => {
       const allPosts = await PostsAPI({ showLoader, hideLoader }).listAll()
-      for (const post of allPosts) {
-        post.comments = await CommentsAPI({
-          showLoader,
-          hideLoader,
-        }).listAll(post._id)
-      }
       setPosts(allPosts)
     })()
   }, [])

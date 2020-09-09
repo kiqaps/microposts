@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { Post } from '../models/Post'
 import { HttpError } from '../utils/HttpError'
 import { eventbus } from '../services/eventbus'
+import { Comment } from '../models/Comment'
 
 export const postsRouter = Router()
 
@@ -13,7 +14,16 @@ postsRouter.get('/', async (req, res) => {
     sort = JSON.parse(jsonSort)
   }
 
-  const posts = await Post.find().sort(sort).exec()
+  const posts = (await Post.find().sort(sort).exec()).map(post => ({
+    ...post.toObject(),
+  }))
+
+  for (const post of posts) {
+    post.comments = await Comment.find({ belongsTo: post._id })
+      .sort({ createdAt: -1 })
+      .exec()
+  }
+
   return res.json(posts)
 })
 
