@@ -3,6 +3,7 @@ import { isValidObjectId } from 'mongoose'
 import { Comment } from '../models/Comment'
 import { HttpError } from '../utils/HttpError'
 import { eventbus } from '../services/eventbus'
+import { Post } from '../models/Post'
 
 export const commentsRouter = Router()
 
@@ -33,6 +34,10 @@ commentsRouter.post('/:postId/comments', async (req, res) => {
 
   if (!isValidObjectId(postId)) {
     throw new HttpError('Invalid POST ID')
+  }
+
+  if (!(await Post.exists({ _id: postId }))) {
+    throw new HttpError('POST not found')
   }
 
   const { content } = req.body
