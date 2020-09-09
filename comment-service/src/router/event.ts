@@ -1,27 +1,30 @@
 import { RequestHandler } from 'express'
 import { IEvent, eventbus } from '../services/eventbus'
-import { Post } from '../models/Post'
 import { Comment } from '../models/Comment'
+import { Post } from '../models/Post'
 
 export const eventHandler: RequestHandler = async (req, res) => {
   const { topic, payload }: IEvent = req.body
 
   switch (topic) {
-    case 'syncPosts':
-      eventbus().publish({ topic: 'postsList', payload: await Post.find() })
+    case 'syncComments':
+      eventbus().publish({
+        topic: 'commentsList',
+        payload: await Comment.find(),
+      })
       break
 
-    case 'newComment':
+    case 'newPost':
       if (payload) {
-        await Comment.create(payload)
+        await Post.create(payload)
       }
       break
 
-    case 'commentsList':
+    case 'postsList':
       if (payload && payload.length > 0) {
-        for (const comment of payload) {
-          if (!(await Comment.exists({ _id: comment._id }))) {
-            await Comment.create(comment)
+        for (const post of payload) {
+          if (!(await Post.exists({ _id: post._id }))) {
+            await Post.create(post)
           }
         }
       }
@@ -30,6 +33,5 @@ export const eventHandler: RequestHandler = async (req, res) => {
     default:
       console.log(`${topic} without handler`)
   }
-
   return res.status(204).send()
 }

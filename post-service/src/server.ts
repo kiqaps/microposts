@@ -41,4 +41,7 @@ app.listen(3000, () => {
   console.log(`Server running at port 3000`)
 
   eventbus().subscribe('newComment')
+  eventbus().subscribe('commentsList')
+  eventbus().subscribe('syncPosts')
+  eventbus().publish({ topic: 'syncComments' })
 })
