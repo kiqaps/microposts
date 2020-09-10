@@ -8,7 +8,7 @@ import React, {
 import { Spinner } from '../Views/Components/Spinner'
 import { IPost } from '../Models/IPost'
 import { PostsAPI } from '../Services/PostsAPI'
-import { CommentsAPI } from '../Services/CommentsAPI'
+import { toast } from 'react-toastify'
 
 export interface IGlobalContext {
   showLoader: () => void
@@ -33,8 +33,12 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     ;(async () => {
-      const allPosts = await PostsAPI({ showLoader, hideLoader }).listAll()
-      setPosts(allPosts)
+      try {
+        const allPosts = await PostsAPI({ showLoader, hideLoader }).listAll()
+        setPosts(allPosts)
+      } catch (ex) {
+        toast.error(ex.response?.data?.error || ex.message)
+      }
     })()
   }, [])
 

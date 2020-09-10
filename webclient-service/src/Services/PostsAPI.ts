@@ -34,7 +34,7 @@ export const PostsAPI = ({
     },
     error => {
       hideLoader()
-      return error
+      return Promise.reject(error)
     },
   )
 

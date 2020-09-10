@@ -4,6 +4,7 @@ import { Form } from './style'
 import { PostsAPI } from '../../../Services/PostsAPI'
 import { Container } from '../../Layout'
 import { GlobalContext } from '../../../Contexts/Global'
+import { toast } from 'react-toastify'
 
 export const CreatePostForm: React.FC = () => {
   const [content, setContent] = useState<string>('')
@@ -13,9 +14,13 @@ export const CreatePostForm: React.FC = () => {
     evt.preventDefault()
 
     if (content) {
-      const post = await PostsAPI(globalContext).create(content)
-      globalContext.setPosts(old => [post, ...old])
-      setContent('')
+      try {
+        const post = await PostsAPI(globalContext).create(content)
+        globalContext.setPosts(old => [post, ...old])
+        setContent('')
+      } catch (ex) {
+        toast.error(ex.response?.data?.error || ex.message)
+      }
     }
   }
 

@@ -34,7 +34,7 @@ export const CommentsAPI = ({
     },
     error => {
       hideLoader()
-      return error
+      return Promise.reject(error)
     },
   )
 
