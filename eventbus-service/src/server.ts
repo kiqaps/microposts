@@ -1,23 +1,36 @@
 import express from 'express'
 import cors from 'cors'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { IListeners } from './IListener'
 import { IEvent } from './IEvent'
+import { NotifyError } from './NotifyError'
+
+interface IEventQueue {
+  [topic: string]: IEvent[]
+}
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 
 const listeners: IListeners = {}
+const eventQueue: IEventQueue = {}
 
-app.post('/subscribe', (req, res) => {
+app.post('/subscribe', async (req, res) => {
   const { topic, address } = req.body
 
   if (!topic || !address) {
     return res.status(400).json({
       error: 'Missing topic or address',
     })
+  }
+
+  if (eventQueue[topic] && eventQueue[topic].length > 0) {
+    for (const event of eventQueue[topic]) {
+      await axios.post(`${address}/event`, event)
+    }
+    delete eventQueue[topic]
   }
 
   listeners[topic] = listeners[topic] || []
@@ -51,7 +64,7 @@ app.post('/unsubscribe', (req, res) => {
   return res.status(204).send()
 })
 
-app.post('/event', (req, res) => {
+app.post('/event', async (req, res) => {
   const { topic, payload } = req.body
 
   if (!topic) {
@@ -67,13 +80,39 @@ app.post('/event', (req, res) => {
     console.log(`\twith payload: ${JSON.stringify(payload)}`)
   }
 
+  let atLeastOneNotified = false
   if (listeners[topic]) {
-    for (const address of listeners[topic]) {
-      axios.post(`${address}/event`, event).catch(err => {
-        console.log(err)
-      })
+    const results = await Promise.allSettled(
+      listeners[topic].map(
+        address =>
+          new Promise<AxiosResponse<any>>((resolve, reject) => {
+            axios
+              .post(`${address}/event`, event)
+              .then(resolve)
+              .catch(err => {
+                reject(new NotifyError(err.message, address))
+              })
+          }),
+      ),
+    )
+
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        const { listenerAddress } = result.reason as NotifyError
+        listeners[topic] = listeners[topic].filter(
+          address => address !== listenerAddress,
+        )
+      } else {
+        atLeastOneNotified = true
+      }
     }
   }
+
+  if (!atLeastOneNotified) {
+    eventQueue[topic] = eventQueue[topic] || []
+    eventQueue[topic].push(event)
+  }
+
   return res.status(204).send()
 })
 
