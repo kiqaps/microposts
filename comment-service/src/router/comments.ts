@@ -40,7 +40,8 @@ commentsRouter.post('/:postId/comments', async (req, res) => {
     throw new HttpError('POST not found')
   }
 
-  const { content } = req.body
+  let { content } = req.body
+  content = (content as string).trim()
 
   if (!content) {
     throw new HttpError("Missing COMMENT's content")

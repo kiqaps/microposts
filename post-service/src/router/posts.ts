@@ -28,7 +28,8 @@ postsRouter.get('/', async (req, res) => {
 })
 
 postsRouter.post('/', async (req, res) => {
-  const { content } = req.body
+  let { content } = req.body
+  content = (content as string).trim()
 
   if (!content) {
     throw new HttpError("Missing POST's content")
