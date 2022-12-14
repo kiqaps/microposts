@@ -103,6 +103,7 @@ data "local_file" "ssh-pkey" {
 }
 
 resource "local_file" "ansible_inventory" {
+  file_permission = "0644"
   filename = "../configuration/inventory/main.yml"
   content = templatefile(
     "./inventory.tpl",

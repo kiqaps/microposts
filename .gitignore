@@ -5,3 +5,5 @@ build/
 .terraform/
 infra/ssh/id_rsa
 infra/configuration/inventory/main.yml
+infra/provisioning/terraform.tfstate
+infra/provisioning/terraform.tfstate.backup
