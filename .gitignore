@@ -1,3 +1,7 @@
 node_modules/
 build/
 *.log
+
+.terraform/
+infra/ssh/id_rsa
+infra/configuration/inventory/main.yml
